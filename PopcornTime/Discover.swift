@@ -22,9 +22,16 @@ struct Discover: TabItem {
         switch self.fetchType! {
         case .Movies:
             NetworkManager.sharedManager().fetchMovies(limit: 50, page: 1, quality: "1080p", minimumRating: 0, queryTerm: nil, genre: nil, sortBy: "year", orderBy: "desc") { movies, error in
-                if let movies = movies {
-                    let recipe = DiscoverRecipe(title: "Discover New Movies", movies: movies)
-                    self.serveRecipe(recipe)
+                if let movies1 = movies {
+                    NetworkManager.sharedManager().fetchMovies(limit: 50, page: 1, quality: "1080p", minimumRating: 0, queryTerm: nil, genre: nil, sortBy: "year", orderBy: "desc") { movies, error in
+                        if let movies2 = movies {
+                            var mutableMovies: [Movie] = movies1
+                            mutableMovies += movies2
+                            let recipe = DiscoverRecipe(title: "Discover New Movies", movies: mutableMovies)
+                            // TODO: Find a way to "mark" the end and beginning of each section.
+                            self.serveRecipe(recipe)
+                        }
+                    }
                 }
             }
             
